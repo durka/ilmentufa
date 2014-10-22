@@ -131,6 +131,28 @@ void _push(YYS *pushee, YYS *pushed)
   TRACE_OUT;
 }
 
+void _concat(YYS *concattee, YYS *concatted)
+{
+  TRACE_IN;
+  assert(concattee->type == VT_SEQ);
+  assert(concatted->type == VT_SEQ);
+
+  concattee->len += concatted->len;
+
+  LLNode *n = concattee->seq;
+  while (n->next != NULL) n = n->next;
+  if (n->value == NULL)
+  {
+    concattee->seq = concatted->seq;
+  }
+  else
+  {
+    n->next = concatted->seq;
+  }
+
+  TRACE_OUT;
+}
+
 YYS* _node_int(YYS *label, YYS *arg)
 {
   TRACE_IN;
@@ -183,8 +205,8 @@ YYS* _node2(YYS *label, YYS *arg1, YYS *arg2)
   YYS *ret = _make_seq();
 
   _push(ret, label);
-  _push(ret, _node(arg1, NULL));
-  _push(ret, _node(arg2, NULL));
+  _concat(ret, _node(arg1, NULL));
+  _concat(ret, _node(arg2, NULL));
 
   TRACE_OUT;
   return ret;
@@ -208,7 +230,6 @@ YYS* _node_nonempty(YYS *label, YYS *arg)
 }
 
 // === ZOI functions === //
-typedef short bool;
 
 char *_g_zoi_delim = "";
 
