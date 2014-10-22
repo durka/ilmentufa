@@ -1,0 +1,30 @@
+misc
+  manual fix: remove &post_word from FAhA
+  manual fix: FIXME remove "| ()" from rp_expression_tail
+  manual fix: zoi_word return
+
+return => $$=
+  s/return _\(node\|node_nonempty\|node2\)("\([^"]*\)"/$$ = _\1(_make_str("\2", 0)/g
+  manual fix: zoi_word, zoi_close (&{} contains a bool expression, no $$)
+
+leg syntax
+  comments: s/^\/\*/#
+  alternation: s/ \/ / | /g
+  manual fix: space_char (\u0020 => real space)
+
+factor out colon assignments to sub-rules
+  factor out "expr:"
+    grammar: s/^\([-a-zA-Z_][-a-zA-Z0-9_]*\) \+= \+expr:(\([^{]*\)) \+{\([^}]*\)}/\1 = expr:\1__expr {\3}\r\1__expr = \2 
+    phones:  s/^\([-a-zA-Z_][-a-zA-Z0-9_]*\) \+= \+&cmavo expr:(\([^{]*\)) \+&post_word \+{\([^}]*\)}/\1 = \&cmavo expr:\1__expr \&post_word {\3}\r\1__expr = \2
+    manual fix: indicator, zei_tail, BAhE_clause, zoi_word, glide, diphthong, vowel, initial
+
+fix stuff that isn't YYSTYPE
+  array literal to _make_pair: s/\$\$ = \[\([^,]*\), expr]/$$ = _make_pair(\1, _join(expr)) 
+  array literal to _make_pair (with _join): s/\$\$ = \[\([^,]*\), _join(expr)]/$$ = _make_pair(\1, _join(expr)) 
+  string literal to _make_str: s/\$\$ = "\([^"]*\)"/$$ = _make_str("\1", 0)/g 
+  manual fix: BY_clause, BRIVLA_clause (expr[])
+
+fix elidible terminator rules
+  == "" => ->len == 0
+  [" "] => _make_str
+

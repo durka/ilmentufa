@@ -70,6 +70,23 @@ YYS* _make_seq()
   return ret;
 }
 
+YYS* _make_pair(char *s1, YYS *s2)
+{
+  TRACE_IN;
+
+  assert(s2->type == VT_STR);
+  YYS *ret = _make_seq();
+
+  ret->seq->value = _make_str(s1, 0);
+  ret->seq->next = malloc(sizeof(LLNode));
+  ret->seq->next->value = s2;
+  ret->seq->next->next = NULL;
+  ret->len = ret->seq->value->len + ret->seq->next->value->len;
+
+  TRACE_OUT;
+  return ret;
+}
+
 YYS* _join(YYS *arg)
 {
   TRACE_IN;
@@ -106,6 +123,34 @@ YYS* _join(YYS *arg)
 
   TRACE_OUT;
   return ret;
+}
+
+char* _serialize(YYS *arg, bool cont)
+{
+  static char out[100];
+  if (!cont)
+  {
+    memset(out, 0, 100);
+  }
+
+  if (arg->type == VT_STR)
+  {
+    strncat(out, "(", 1);
+    strncat(out, arg->str, arg->len);
+    strncat(out, ")", 1);
+  }
+  else
+  {
+    strncat(out, "[", 1);
+    for (LLNode *n = arg->seq; n != NULL; n = n->next)
+    {
+      _serialize(n->value, 1);
+      if (n->next != NULL) strncat(out, ", ", 2);
+    }
+    strncat(out, "]", 1);
+  }
+
+  return out;
 }
 
 void _push(YYS *pushee, YYS *pushed)
@@ -231,43 +276,43 @@ YYS* _node_nonempty(YYS *label, YYS *arg)
 
 // === ZOI functions === //
 
-char *_g_zoi_delim = "";
-
-YYS* _zoi_assign_delim(YYS *word)
+YYS* _zoi_assign_delim(YYS *word, char **delim)
 {
   TRACE_IN;
   assert(word->type == VT_STR);
 
-  _g_zoi_delim = strrchr(word->str, ',')+1;
+  char *comma = strrchr(word->str, ',');
+  *delim = (comma == NULL) ? word->str : (comma+1);
 
   TRACE_OUT;
   return word;
 }
 
-bool _zoi_check_quote(YYS *word)
+bool _zoi_check_quote(char *quote, char *delim)
 {
   TRACE_IN;
-  assert(word->type == VT_STR);
 
-  char *p;
-  while ((p = strchr(word->str, ',')) != NULL)
+  int quote_len = strlen(quote);
+  char *quote_no_commas = malloc(quote_len+1);
+  memset(quote_no_commas, 0, quote_len+1);
+
+  for (int i = 0, j = 0; i < quote_len; ++i)
   {
-    memmove(p, p+1, word->len + word->str - p);
-    word->len--;
+    if (quote[i] != ',') quote_no_commas[j++] = quote[i];
   }
 
   TRACE_OUT;
-  return strcmp(word->str, _g_zoi_delim) == 0;
+  return strcmp(quote_no_commas, delim) == 0;
 }
 
-bool _zoi_check_delim(YYS *word)
+bool _zoi_check_delim(char *word, char *delim)
 {
   TRACE_IN;
-  assert(word->type == VT_STR);
 
-  char *s = strrchr(word->str, ',')+1;
+  char *comma = strrchr(word, ',');
+  char *new_delim = (comma == NULL) ? word : (comma+1);
 
   TRACE_OUT;
-  return strcmp(word->str, _g_zoi_delim) == 0;
+  return strcmp(new_delim, delim) == 0;
 }
 

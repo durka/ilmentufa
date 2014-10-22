@@ -28,33 +28,6 @@ CHEAT_TEST(setup,
 )
 
 CHEAT_DECLARE(
-  char* _serialize(YYS *arg, bool cont)
-  {
-    static char out[100];
-    if (!cont)
-    {
-      memset(out, 0, 100);
-    }
-
-    if (arg->type == VT_STR)
-    {
-      strncat(out, "(", 1);
-      strncat(out, arg->str, arg->len);
-      strncat(out, ")", 1);
-    }
-    else
-    {
-      strncat(out, "[", 1);
-      for (LLNode *n = arg->seq; n != NULL; n = n->next)
-      {
-        _serialize(n->value, out);
-        if (n->next != NULL) strncat(out, ", ", 2);
-      }
-      strncat(out, "]", 1);
-    }
-
-    return out;
-  }
 
   YYS test_seq = {.type = VT_SEQ,
                   .seq = &(LLNode){.value = &(YYS){.type = VT_STR,
@@ -81,6 +54,9 @@ CHEAT_DECLARE(
 
 CHEAT_TEST(join,
   cheat_assert(0 == strcmp(_join(&test_seq)->str, "hello world"));
+)
+CHEAT_TEST(make_pair,
+  cheat_assert(0 == strcmp(_join(_make_pair("hello", &test_str))->str, "hellotest"));
 )
 CHEAT_TEST(node,
   cheat_assert(0 == strcmp(_serialize(_node(&test_str, &test_seq), 0), "[(test), [(hello), ( ), (world)]]"));
