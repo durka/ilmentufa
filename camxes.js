@@ -27041,7 +27041,7 @@ var camxes = (function(){
           result0 = parse_zifcme();
         }
         if (result0 !== null) {
-          result0 = (function(offset, expr) { return ["cmevla", _join(expr)]; })(pos0, result0);
+          result0 = (function(offset, expr) { return ["cmevla", _flatten(expr)]; })(pos0, result0);
         }
         if (result0 === null) {
           pos = pos0;
@@ -27866,7 +27866,7 @@ var camxes = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, expr) { return _join(expr); })(pos0, result0);
+          result0 = (function(offset, expr) { return _flatten(expr); })(pos0, result0);
         }
         if (result0 === null) {
           pos = pos0;
@@ -28284,7 +28284,7 @@ var camxes = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, expr) { return _join(expr); })(pos0, result0);
+          result0 = (function(offset, expr) { return expr; })(pos0, result0);
         }
         if (result0 === null) {
           pos = pos0;
@@ -28383,7 +28383,7 @@ var camxes = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, expr) { return _join(expr); })(pos0, result0);
+          result0 = (function(offset, expr) { return expr; })(pos0, result0);
         }
         if (result0 === null) {
           pos = pos0;
@@ -29674,7 +29674,7 @@ var camxes = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, expr) {return _join(expr);})(pos0, result0);
+          result0 = (function(offset, expr) {return _node("final_syllable", _join(expr));})(pos0, result0);
         }
         if (result0 === null) {
           pos = pos0;
@@ -29748,7 +29748,7 @@ var camxes = (function(){
           }
         }
         if (result0 !== null) {
-          result0 = (function(offset, expr) {return _join(expr);})(pos0, result0);
+          result0 = (function(offset, expr) {return _node("stressed_syllable", _join(expr));})(pos0, result0);
         }
         if (result0 === null) {
           pos = pos0;
@@ -29963,7 +29963,7 @@ var camxes = (function(){
           result0 = parse_consonantal_syllable();
         }
         if (result0 !== null) {
-          result0 = (function(offset, expr) {return _join(expr);})(pos0, result0);
+          result0 = (function(offset, expr) {return _node("unstressed_syllable", _join(expr));})(pos0, result0);
         }
         if (result0 === null) {
           pos = pos0;
@@ -30258,7 +30258,7 @@ var camxes = (function(){
           result0 = parse_consonantal_syllable();
         }
         if (result0 !== null) {
-          result0 = (function(offset, expr) {return _join(expr);})(pos0, result0);
+          result0 = (function(offset, expr) {return _node("any_syllable", _join(expr));})(pos0, result0);
         }
         if (result0 === null) {
           pos = pos0;
@@ -30320,7 +30320,7 @@ var camxes = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, expr) {return _join(expr);})(pos0, result0);
+          result0 = (function(offset, expr) {return _node("syllable", _join(expr));})(pos0, result0);
         }
         if (result0 === null) {
           pos = pos0;
@@ -30407,7 +30407,7 @@ var camxes = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, expr) {return _join(expr);})(pos0, result0);
+          result0 = (function(offset, expr) {return _node("consonantal_syllable", _join(expr));})(pos0, result0);
         }
         if (result0 === null) {
           pos = pos0;
@@ -56684,6 +56684,13 @@ var camxes = (function(){
         {
           var _n = _node(label, arg);
           return (_n.length == 1 && _n[0] == label) ? [] : _n;
+        }
+      
+        // flatten arbitrarily nested array of strings
+        // won't work if there are any commas in the strings
+        function _flatten(arg)
+        {
+          return arg.toString().split(",");
         }
         
         // === ZOI functions === //

@@ -88,6 +88,13 @@
     var _n = _node(label, arg);
     return (_n.length == 1 && _n[0] == label) ? [] : _n;
   }
+
+  // flatten arbitrarily nested array of strings
+  // won't work if there are any commas in the strings
+  function _flatten(arg)
+  {
+    return arg.toString().split(",");
+  }
   
   // === ZOI functions === //
 
@@ -1373,7 +1380,7 @@ zoi_close = w:lojban_word &{ return (_zoi_check_delim(w)); }
 
 //___________________________________________________________________
 
-cmevla = expr:(jbocme / zifcme) { return ["cmevla", _join(expr)]; }
+cmevla = expr:(jbocme / zifcme) { return ["cmevla", _flatten(expr)]; }
 
 zifcme = (!h (nucleus / glide / h / consonant !pause / digit)* consonant &pause)
 
@@ -1407,7 +1414,7 @@ initial_rafsi = expr:(extended_rafsi / y_rafsi / !any_extended_rafsi y_less_rafs
 
 any_extended_rafsi = expr:(fuhivla / extended_rafsi / stressed_extended_rafsi) { return _join(expr); }
 
-fuhivla = expr:(fuhivla_head stressed_syllable consonantal_syllable* final_syllable) { return _join(expr); }
+fuhivla = expr:(fuhivla_head stressed_syllable consonantal_syllable* final_syllable) { return _flatten(expr); }
 
 stressed_extended_rafsi = expr:(stressed_brivla_rafsi / stressed_fuhivla_rafsi) { return _join(expr); }
 
@@ -1421,9 +1428,9 @@ stressed_fuhivla_rafsi = expr:(fuhivla_head stressed_syllable &consonant onset y
 
 fuhivla_rafsi = expr:(&unstressed_syllable fuhivla_head &consonant onset y h?) { return _join(expr); }
 
-fuhivla_head = expr:(!rafsi_string brivla_head) { return _join(expr); }
+fuhivla_head = expr:(!rafsi_string brivla_head) { return expr; }
 
-brivla_head = expr:(!cmavo !slinkuhi !h &onset unstressed_syllable*) { return _join(expr); }
+brivla_head = expr:(!cmavo !slinkuhi !h &onset unstressed_syllable*) { return expr; }
 
 slinkuhi = expr:(consonant rafsi_string) { return _join(expr); }
 
@@ -1465,15 +1472,15 @@ r_hyphen = expr:(r &consonant / n &r) { return _join(expr); }
 
 //___________________________________________________________________
 
-final_syllable = expr:(onset !y !stressed nucleus !cmevla &post_word) {return _join(expr);}
+final_syllable = expr:(onset !y !stressed nucleus !cmevla &post_word) {return _node("final_syllable", _join(expr));}
 
-stressed_syllable = expr:(&stressed syllable / syllable &stress) {return _join(expr);}
+stressed_syllable = expr:(&stressed syllable / syllable &stress) {return _node("stressed_syllable", _join(expr).toUpperCase());}
 
 stressed_diphthong = expr:(&stressed diphthong / diphthong &stress) {return _join(expr);}
 
 stressed_vowel = expr:(&stressed vowel / vowel &stress) {return _join(expr);}
 
-unstressed_syllable = expr:(!stressed syllable !stress / consonantal_syllable) {return _join(expr);}
+unstressed_syllable = expr:(!stressed syllable !stress / consonantal_syllable) {return _node("unstressed_syllable", _join(expr));}
 
 unstressed_diphthong = expr:(!stressed diphthong !stress) {return _join(expr);}
 
@@ -1483,11 +1490,11 @@ stress = expr:(consonant* y? syllable pause) {return _join(expr);}
 
 stressed = expr:(onset comma* [AEIOU]) {return _join(expr);}
 
-any_syllable = expr:(onset nucleus coda? / consonantal_syllable) {return _join(expr);}
+any_syllable = expr:(onset nucleus coda? / consonantal_syllable) {return _node("any_syllable", _join(expr));}
 
-syllable = expr:(onset !y nucleus coda?) {return _join(expr);}
+syllable = expr:(onset !y nucleus coda?) {return _node("syllable", _join(expr));}
 
-consonantal_syllable = expr:(consonant syllabic &(consonantal_syllable / onset) (consonant &spaces)?) {return _join(expr);}
+consonantal_syllable = expr:(consonant syllabic &(consonantal_syllable / onset) (consonant &spaces)?) {return _node("consonantal_syllable", _join(expr));}
 
 coda = expr:(!any_syllable consonant &any_syllable / syllabic? consonant? &pause) {return _join(expr);}
 
