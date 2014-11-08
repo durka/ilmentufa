@@ -485,7 +485,9 @@ var camxes = (function(){
         "CVCy_lujvo": parse_CVCy_lujvo,
         "cmavo_form": parse_cmavo_form,
         "brivla": parse_brivla,
+        "expanded_brivla": parse_expanded_brivla,
         "brivla_core": parse_brivla_core,
+        "expanded_brivla_core": parse_expanded_brivla_core,
         "stressed_initial_rafsi": parse_stressed_initial_rafsi,
         "initial_rafsi": parse_initial_rafsi,
         "any_extended_rafsi": parse_any_extended_rafsi,
@@ -581,6 +583,7 @@ var camxes = (function(){
         "initial_spaces": parse_initial_spaces,
         "ybu": parse_ybu,
         "lujvo": parse_lujvo,
+        "expanded_lujvo": parse_expanded_lujvo,
         "A": parse_A,
         "BAI": parse_BAI,
         "BAhE": parse_BAhE,
@@ -27674,6 +27677,66 @@ var camxes = (function(){
         return result0;
       }
       
+      function parse_expanded_brivla() {
+        var cacheKey = "expanded_brivla@" + pos;
+        var cachedResult = cache[cacheKey];
+        if (cachedResult) {
+          pos = cachedResult.nextPos;
+          return cachedResult.result;
+        }
+        
+        var result0, result1, result2;
+        var pos0, pos1, pos2;
+        
+        pos0 = pos;
+        pos1 = pos;
+        pos2 = pos;
+        reportFailures++;
+        result0 = parse_cmavo();
+        reportFailures--;
+        if (result0 === null) {
+          result0 = "";
+        } else {
+          result0 = null;
+          pos = pos2;
+        }
+        if (result0 !== null) {
+          result1 = [];
+          result2 = parse_initial_rafsi();
+          while (result2 !== null) {
+            result1.push(result2);
+            result2 = parse_initial_rafsi();
+          }
+          if (result1 !== null) {
+            result2 = parse_expanded_brivla_core();
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, expr) { return _node(expr); })(pos0, result0);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        
+        cache[cacheKey] = {
+          nextPos: pos,
+          result:  result0
+        };
+        return result0;
+      }
+      
       function parse_brivla_core() {
         var cacheKey = "brivla_core@" + pos;
         var cachedResult = cache[cacheKey];
@@ -27711,6 +27774,55 @@ var camxes = (function(){
         }
         if (result0 !== null) {
           result0 = (function(offset, expr) { return _join(expr); })(pos0, result0);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        
+        cache[cacheKey] = {
+          nextPos: pos,
+          result:  result0
+        };
+        return result0;
+      }
+      
+      function parse_expanded_brivla_core() {
+        var cacheKey = "expanded_brivla_core@" + pos;
+        var cachedResult = cache[cacheKey];
+        if (cachedResult) {
+          pos = cachedResult.nextPos;
+          return cachedResult.result;
+        }
+        
+        var result0, result1;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        result0 = parse_fuhivla();
+        if (result0 === null) {
+          result0 = parse_gismu();
+          if (result0 === null) {
+            result0 = parse_CVV_final_rafsi();
+            if (result0 === null) {
+              pos1 = pos;
+              result0 = parse_stressed_initial_rafsi();
+              if (result0 !== null) {
+                result1 = parse_short_final_rafsi();
+                if (result1 !== null) {
+                  result0 = [result0, result1];
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            }
+          }
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, expr) { return _node(expr); })(pos0, result0);
         }
         if (result0 === null) {
           pos = pos0;
@@ -34501,6 +34613,70 @@ var camxes = (function(){
         }
         if (result0 !== null) {
           result0 = (function(offset, expr) {return _node("lujvo", expr);})(pos0, result0);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        
+        cache[cacheKey] = {
+          nextPos: pos,
+          result:  result0
+        };
+        return result0;
+      }
+      
+      function parse_expanded_lujvo() {
+        var cacheKey = "expanded_lujvo@" + pos;
+        var cachedResult = cache[cacheKey];
+        if (cachedResult) {
+          pos = cachedResult.nextPos;
+          return cachedResult.result;
+        }
+        
+        var result0, result1, result2;
+        var pos0, pos1, pos2;
+        
+        pos0 = pos;
+        pos1 = pos;
+        pos2 = pos;
+        reportFailures++;
+        result0 = parse_gismu();
+        reportFailures--;
+        if (result0 === null) {
+          result0 = "";
+        } else {
+          result0 = null;
+          pos = pos2;
+        }
+        if (result0 !== null) {
+          pos2 = pos;
+          reportFailures++;
+          result1 = parse_fuhivla();
+          reportFailures--;
+          if (result1 === null) {
+            result1 = "";
+          } else {
+            result1 = null;
+            pos = pos2;
+          }
+          if (result1 !== null) {
+            result2 = parse_expanded_brivla();
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, expr) {return _node("lujvo", [_flatten(expr)]);})(pos0, result0);
         }
         if (result0 === null) {
           pos = pos0;
@@ -56693,6 +56869,14 @@ var camxes = (function(){
         return { line: line, column: column };
       }
       
+      
+      
+        // flatten arbitrarily nested array of strings
+        // won't work if there are any commas in the strings
+        function _flatten(arg)
+        {
+          return arg.toString().split(",");
+        }
       
         function _join(arg)
         {

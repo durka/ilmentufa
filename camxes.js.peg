@@ -40,6 +40,14 @@
 // ___ GRAMMAR ___
 
 {
+
+  // flatten arbitrarily nested array of strings
+  // won't work if there are any commas in the strings
+  function _flatten(arg)
+  {
+    return arg.toString().split(",");
+  }
+
   function _join(arg)
   {
     if (typeof(arg) == "string")
@@ -1396,8 +1404,10 @@ cmavo_form = expr:(!h !cluster onset (nucleus h)* (!stressed nucleus / nucleus !
 //___________________________________________________________________
 
 brivla = expr:(!cmavo initial_rafsi* brivla_core) { return _join(expr); }
+expanded_brivla = expr:(!cmavo initial_rafsi* expanded_brivla_core) { return _node(expr); }
 
 brivla_core = expr:(fuhivla / gismu / CVV_final_rafsi / stressed_initial_rafsi short_final_rafsi) { return _join(expr); }
+expanded_brivla_core = expr:(fuhivla / gismu / CVV_final_rafsi / stressed_initial_rafsi short_final_rafsi) { return _node(expr); }
 
 stressed_initial_rafsi = expr:(stressed_extended_rafsi / stressed_y_rafsi / stressed_y_less_rafsi) { return _join(expr); }
 
@@ -1611,6 +1621,7 @@ initial_spaces = expr:((comma* space_char / !ybu Y)+ EOF? / EOF)  {return _join(
 ybu = expr:(Y space_char* BU)  {return "ybu";}
 
 lujvo = expr:(!gismu !fuhivla brivla)  {return _node("lujvo", expr);}
+expanded_lujvo = expr:(!gismu !fuhivla expanded_brivla)  {return _node("lujvo", [_flatten(expr)]);}
 
 //___________________________________________________________________
 
