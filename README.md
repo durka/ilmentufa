@@ -12,6 +12,7 @@ For generating a PEGJS grammar engine from its PEG grammar file, as well as for 
 
 For generating PEGJS engine, you may need to get the Node.js module 'pegjs'.
 For running the IRC bots, you may need to get the Node.js module 'irc'.
+For running the RPC server, you may need to get the Node.js module 'zeromq' (and the ZeroMQ library for your system).
 
 However, as the necessary node_modules are already included in this project, I think you'll probably not have to download any of the aforementioned modules. ;)
 
