@@ -12,7 +12,6 @@ var server = new zerorpc.Server({
 
 function run_camxes(input, grammar, rule, mode) {
 	var result;
-  console.log('parsing ' + input);
 	result = camxes_pre.preprocessing(input);
 	try {
     if (grammar == "exp") {
