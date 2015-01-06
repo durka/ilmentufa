@@ -71,7 +71,7 @@ function get_bitly_link(bit, url, options, next) {
 }
 
 function start_twitter_stream(options) {
-    twit = new twitter({
+    twit = twitter.create({
         consumer_key:        options.secrets.consumer.key,
         consumer_secret:     options.secrets.consumer.secret,
         access_token_key:    options.secrets.access_token.key,
