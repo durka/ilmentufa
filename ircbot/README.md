@@ -13,7 +13,7 @@ In order to autoupdate dumps immediately type "mensi: ko ningau lo nei"
 Some more informations are found [here](http://mw.lojban.org/index.php?title=IRC_Bots#mensi.2C_livla).
 
 To run the CAMXES and MIKYKIBYKARNI bots, you need to ```npm install horixon/immortal-ntwitter``` and
-configure a Twitter app. Copy ```ircbot/twitter.secret.sample``` to ```ircbot/twitter.secret``` and
+configure a Twitter app. Copy ```ircbot/nuzba.secrets.sample``` to ```ircbot/nuzba.secrets``` and
 fill in the values. Then run as above, but replace ```livla.js``` with ```camxes.js```.
 These two bots may be uncoupled at a later date.
 
