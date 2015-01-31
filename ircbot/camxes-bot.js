@@ -1,6 +1,7 @@
 var irc = require('irc');
 var fs = require('fs');
 var yaml = require('js-yaml');
+var Entities = require('html-entities').AllHtmlEntities;
 var twitter = require('immortal-ntwitter');
 var rss = require('rss-watcher');
 var bitly = require('node-bitlyapi');
@@ -81,12 +82,13 @@ function start_twitter_stream(options) {
     console.log('logged into twitter!');
 
     twit.immortalStream('statuses/filter', { 'track': options.words.join(',') }, function (stream) {
+        entities = new Entities();
         stream.on('data', function (data) {
             if ((options.exclude.indexOf(data.user.screen_name) == -1) && (options.retweets || !data.retweeted_status)) {
                 console.log('captured tweet from @' + data.user.screen_name + " {" + data.text + "}");
                 options.link('https://twitter.com/' + data.user.id_str + '/status/' + data.id_str, function (url) {
                     options.enqueue('@' + data.user.screen_name
-                                        + ': ' + data.text.replace(/\n/g, '\\n')
+                                        + ': ' + entities.decode(data.text.replace(/\n/g, '\\n'))
                                         + ' [' + url + ']');
                 });
             }
