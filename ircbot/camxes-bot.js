@@ -31,7 +31,7 @@ var config = {
         setup: start_twitter_stream,
         check: null,
         options: {
-          words: ['lojban', 'jbobau'],
+          words: ['lojban', 'jbobau', 'ロジバン'],
           exclude: ['uitki', 'hettgutt'],
           retweets: false
         }
@@ -88,7 +88,7 @@ function start_twitter_stream(options) {
                 console.log('captured tweet from @' + data.user.screen_name + " {" + data.text + "}");
                 options.link('https://twitter.com/' + data.user.id_str + '/status/' + data.id_str, function (url) {
                     options.enqueue('@' + data.user.screen_name
-                                        + ': ' + entities.decode(data.text.replace(/\n/g, '\\n'))
+                                        + ': ' + entities.decode(data.text.replace(/\n/g, '    '))
                                         + ' [' + url + ']');
                 });
             }
